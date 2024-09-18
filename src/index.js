@@ -13,12 +13,25 @@ function MyFunctionComponent(props) {
 }
 
 class MyClassComponent extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {count: 0}
+  }
+
+  handleClick() {
+    let {count} = this.state
+    this.setState({count: count + 1})
+  }
+
   render() {
     return (
       <div style={{color: 'black', display: 'flex', gap: '30px'}}>
         Hello Simple React
         <span>{this.props.a}</span>
         <span>{this.props.b}</span>
+        <span>{this.state.count}</span>
+        <button onClick={this.handleClick.bind(this)}>点我</button>
       </div>
     )
   }
