@@ -1,4 +1,5 @@
-import {REACT_ELEMENT} from "./utils";
+import {REACT_ELEMENT, REACT_FORWARD_REF} from "./utils";
+import {Component} from './Component'
 
 function createElement(type, properties, children) {
   const ref = properties.ref || null
@@ -10,7 +11,7 @@ function createElement(type, properties, children) {
 
   const props = {...properties}
 
-  if(arguments.length > 3) {
+  if (arguments.length > 3) {
     props.children = Array.prototype.slice.call(arguments, 2)
   } else {
     props.children = children
@@ -25,8 +26,24 @@ function createElement(type, properties, children) {
   }
 }
 
+function createRef() {
+  return {
+    current: null
+  }
+}
+
+function forwardRef(render) {
+  return {
+    $$typeof: REACT_FORWARD_REF,
+    render
+  }
+}
+
 const React = {
-  createElement
+  createElement,
+  Component,
+  createRef,
+  forwardRef
 }
 
 export default React

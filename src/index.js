@@ -1,22 +1,45 @@
 import React from "./react";
 import ReactDOM from './react-dom';
-import {Component} from "./Component";
 
-function MyFunctionComponent(props) {
+const ForwardRefComponent = React.forwardRef((props, ref) => {
   return (
     <div style={{color: 'black', display: 'flex', gap: '30px'}}>
       Hello Simple React
       <span>xx1</span>
-      <span>xx2</span>
+      <span ref={ref}>xx2</span>
     </div>
   )
+})
+
+class InputClassComponent extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.inputRef = React.createRef()
+  }
+
+  focus() {
+    this.inputRef.current.focus()
+  }
+
+  render() {
+    return <input ref={this.inputRef}/>
+  }
 }
 
-class MyClassComponent extends Component {
+class MyClassComponent extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {count: 0}
+
+    this.wrapperRef = React.createRef()
+    this.inputRef = React.createRef()
+
+    setTimeout(() => {
+      this.inputRef.current.focus()
+      console.log(this.wrapperRef)
+    }, 500)
   }
 
   handleClick() {
@@ -32,6 +55,8 @@ class MyClassComponent extends Component {
         <span>{this.props.b}</span>
         <span>{this.state.count}</span>
         <button onClick={this.handleClick.bind(this)}>点我</button>
+        <InputClassComponent ref={this.inputRef}/>
+        <ForwardRefComponent ref={this.wrapperRef}/>
       </div>
     )
   }
