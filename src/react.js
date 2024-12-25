@@ -1,20 +1,21 @@
-import {REACT_ELEMENT, REACT_FORWARD_REF} from "./utils";
-import {Component} from './Component'
+import { REACT_ELEMENT, REACT_FORWARD_REF } from "./utils";
+import { Component } from "./Component";
+import { toVNode } from "./utils";
 
 function createElement(type, properties, children) {
-  const ref = properties.ref || null
-  const key = properties.key || null
+  const ref = properties.ref || null;
+  const key = properties.key || null;
 
-  ;['ref', 'key', '__self', '__source'].forEach(key => {
-    delete properties[key]
-  })
+  ["ref", "key", "__self", "__source"].forEach((key) => {
+    delete properties[key];
+  });
 
-  const props = {...properties}
+  const props = { ...properties };
 
   if (arguments.length > 3) {
-    props.children = Array.prototype.slice.call(arguments, 2)
+    props.children = Array.prototype.slice.call(arguments, 2).map(toVNode);
   } else {
-    props.children = children
+    props.children = toVNode(children);
   }
 
   return {
@@ -22,28 +23,28 @@ function createElement(type, properties, children) {
     type,
     ref,
     key,
-    props
-  }
+    props,
+  };
 }
 
 function createRef() {
   return {
-    current: null
-  }
+    current: null,
+  };
 }
 
 function forwardRef(render) {
   return {
     $$typeof: REACT_FORWARD_REF,
-    render
-  }
+    render,
+  };
 }
 
 const React = {
   createElement,
   Component,
   createRef,
-  forwardRef
-}
+  forwardRef,
+};
 
-export default React
+export default React;

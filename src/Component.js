@@ -1,58 +1,60 @@
-import {findDomByVNode, updateDomTree} from "./react-dom";
+import { findDomByVNode, updateDomTree } from "./react-dom";
 
 export const updaterQueue = {
   isBatch: false,
-  updaters: new Set()
-}
+  updaters: new Set(),
+};
 
 export function flushUpdaterQueue() {
-  updaterQueue.isBatch = false
+  updaterQueue.isBatch = false;
   for (let updater of updaterQueue.updaters) {
-    updater.launchUpdate()
+    updater.launchUpdate();
   }
-  updaterQueue.updaters.clear()
+  updaterQueue.updaters.clear();
 }
 
 class Updater {
   constructor(ClassComponentInstance) {
-    this.ClassComponentInstance = ClassComponentInstance
-    this.pendingStates = []
+    this.ClassComponentInstance = ClassComponentInstance;
+    this.pendingStates = [];
   }
 
   addState(partialState) {
-    this.pendingStates.push(partialState)
-    this.preHandleForUpdate()
+    this.pendingStates.push(partialState);
+    this.preHandleForUpdate();
   }
 
   preHandleForUpdate() {
     if (updaterQueue.isBatch) {
-      updaterQueue.updaters.add(this)
+      updaterQueue.updaters.add(this);
     } else {
-      this.launchUpdate()
+      this.launchUpdate();
     }
   }
 
   launchUpdate() {
-    const {ClassComponentInstance, pendingStates} = this
+    const { ClassComponentInstance, pendingStates } = this;
     if (pendingStates.length === 0) {
-      return
+      return;
     }
-    ClassComponentInstance.state = pendingStates.reduce((preState, newState) => {
-      return {...preState, ...newState}
-    }, ClassComponentInstance.state)
-    this.pendingStates.length = 0
-    ClassComponentInstance.update()
+    ClassComponentInstance.state = pendingStates.reduce(
+      (preState, newState) => {
+        return { ...preState, ...newState };
+      },
+      ClassComponentInstance.state
+    );
+    this.pendingStates.length = 0;
+    ClassComponentInstance.update();
   }
 }
 
 export class Component {
-
-  static IS_CLASS_COMPONENT = true
+  static IS_CLASS_COMPONENT = true;
 
   constructor(props) {
-    this.props = props
-    this.updater = new Updater(this)
-    this.state = {}
+    this.props = props;
+    this.updater = new Updater(this);
+    this.state = {};
   }
 
   setState(partialState) {
@@ -60,17 +62,17 @@ export class Component {
     // this.state = {...this.state, ...partialState}
     // // 2.重新渲染进行更新
     // this.update()
-    this.updater.addState(partialState)
+    this.updater.addState(partialState);
   }
 
   update() {
     // 1.获取重新执行render函数后的虚拟DOM 新虚拟DOM
     // 2.根据新虚拟DOM生成新的真实DOM
     // 3.将真实DOM挂载到页面上
-    const oldVNode = this.oldVNode
-    const oldDOM = findDomByVNode(oldVNode)
-    const newVNode = this.render()
-    updateDomTree(oldDOM, newVNode)
-    this.oldVNode = newVNode
+    const oldVNode = this.oldVNode;
+    const oldDOM = findDomByVNode(oldVNode);
+    const newVNode = this.render();
+    updateDomTree(oldVNode, newVNode, oldDOM);
+    this.oldVNode = newVNode;
   }
 }
