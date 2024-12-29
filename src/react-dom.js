@@ -285,8 +285,9 @@ function updateChildren(parentDOM, oldVNodeChildren, newVNodeChildren) {
     const { type, oldVNode, newVNode, index } = action;
     const childNodes = parentDOM.childNodes;
     const childNode = childNodes[index];
-    const getDomForInsert =
-      type === CREATE ? createDOM(newVNode) : findDomByVNode(oldVNode);
+    const getDomForInsert = () => {
+      return type === CREATE ? createDOM(newVNode) : findDomByVNode(oldVNode);
+    };
     if (childNode) {
       parentDOM.insertBefore(getDomForInsert(), childNode);
     } else {
