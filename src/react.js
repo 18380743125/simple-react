@@ -1,6 +1,5 @@
-import { REACT_ELEMENT, REACT_FORWARD_REF } from "./utils";
+import { REACT_ELEMENT, REACT_FORWARD_REF, toVNode } from "./utils";
 import { Component } from "./Component";
-import { toVNode } from "./utils";
 
 function createElement(type, properties, children) {
   const ref = properties.ref || null;
@@ -42,9 +41,9 @@ function forwardRef(render) {
 
 const React = {
   createElement,
-  Component,
   createRef,
   forwardRef,
+  Component,
 };
 
 export default React;

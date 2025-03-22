@@ -1,4 +1,4 @@
-import { flushUpdaterQueue, updaterQueue } from "./Component";
+import {flushUpdaterQueue, updaterQueue} from "./Component";
 
 export function addEvent(dom, eventName, bindFunction) {
   dom.attach = dom.attach || {};
@@ -32,9 +32,9 @@ function createSyntheticEvent(nativeEvent) {
   const nativeEventKeyValues = {};
   for (let key in nativeEvent) {
     nativeEventKeyValues[key] =
-      typeof nativeEvent[key] === "function"
-        ? nativeEvent[key].bind(nativeEvent)
-        : nativeEvent[key];
+        typeof nativeEvent[key] === "function"
+            ? nativeEvent[key].bind(nativeEvent)
+            : nativeEvent[key];
   }
   const syntheticEvent = Object.assign(nativeEventKeyValues, {
     nativeEvent,

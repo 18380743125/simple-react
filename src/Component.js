@@ -53,8 +53,8 @@ export class Component {
 
   constructor(props) {
     this.props = props;
-    this.updater = new Updater(this);
     this.state = {};
+    this.updater = new Updater(this);
   }
 
   setState(partialState) {
